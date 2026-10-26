@@ -2,7 +2,7 @@ import React from 'react'
 import axios from "axios"
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import login from './login.png'
+
 import './Register.css'
 function Register()
 {
