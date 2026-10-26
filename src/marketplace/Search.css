@@ -1,0 +1,223 @@
+/* ==========================
+   SEARCH CONTAINER
+========================== */
+
+#ser {
+    list-style: none;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+/* ==========================
+   SEARCH INPUT
+========================== */
+
+#ser input {
+    width: 600px;
+    padding: 16px 22px;
+
+    border: 2px solid rgba(56,189,248,.25);
+    border-radius: 50px;
+
+    outline: none;
+
+    background: rgba(15,23,42,.95);
+    color: white;
+
+    font-size: 17px;
+    font-weight: 500;
+
+    transition: .35s ease;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.35);
+}
+
+#ser input::placeholder{
+    color:#94a3b8;
+}
+
+#ser input:focus{
+
+    border-color:#38bdf8;
+
+    box-shadow:
+        0 0 18px rgba(56,189,248,.45),
+        0 18px 40px rgba(0,0,0,.35);
+
+    transform:translateY(-2px);
+}
+
+/* ==========================
+   SEARCH RESULT BOX
+========================== */
+
+#ser1{
+
+    width:600px;
+
+    margin:15px auto;
+
+    padding:0;
+
+    list-style:none;
+
+    background:#0f172a;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(56,189,248,.2);
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.45);
+
+    animation:fade .4s ease;
+}
+
+/* ==========================
+   RESULT ITEM
+========================== */
+
+#ser1 li{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:15px 20px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-size:17px;
+
+    transition:.3s;
+
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+#ser1 li:last-child{
+    border-bottom:none;
+}
+
+#ser1 li:hover{
+
+    background:linear-gradient(
+        90deg,
+        #1e3a8a,
+        #2563eb
+    );
+
+    transform:translateX(8px);
+
+    color:white;
+}
+
+/* ==========================
+   PRODUCT IMAGE
+========================== */
+
+#img{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:12px;
+
+    object-fit:cover;
+
+    border:2px solid rgba(56,189,248,.3);
+
+    transition:.3s;
+}
+
+#ser1 li:hover #img{
+
+    transform:scale(1.08);
+
+    border-color:#38bdf8;
+}
+
+/* ==========================
+   SCROLLBAR
+========================== */
+
+#ser1{
+
+    max-height:450px;
+
+    overflow-y:auto;
+}
+
+#ser1::-webkit-scrollbar{
+
+    width:8px;
+}
+
+#ser1::-webkit-scrollbar-thumb{
+
+    background:#38bdf8;
+
+    border-radius:10px;
+}
+
+#ser1::-webkit-scrollbar-track{
+
+    background:#0f172a;
+}
+
+/* ==========================
+   ANIMATION
+========================== */
+
+@keyframes fade{
+
+    from{
+
+        opacity:0;
+        transform:translateY(-10px);
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:768px){
+
+    #ser input{
+
+        width:90%;
+    }
+
+    #ser1{
+
+        width:90%;
+    }
+
+    #ser1 li{
+
+        font-size:15px;
+        padding:12px;
+    }
+
+    #img{
+
+        width:55px;
+        height:55px;
+    }
+}
