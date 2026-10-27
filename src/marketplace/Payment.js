@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Payment.css";
 
 const CART_KEY = "bookswap_cart";
-const API_URL = "http://127.0.0.1:8000/api/orders/";
+const API_URL = "https://bookswap-backend-five.vercel.app/api/orders/";
 const SHIPPING_FEE = 50;
 
 function readCart() {
