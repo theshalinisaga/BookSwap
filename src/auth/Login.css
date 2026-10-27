@@ -221,3 +221,107 @@ body {
         font-size: 32px;
     }
 }
+
+/* Professional Login Toast Notification */
+.login-toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    width: min(380px, calc(100vw - 32px));
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 17px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    background: #0b1930;
+    color: #ffffff;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.3);
+    animation: toastSlideIn 0.35s ease-out;
+    box-sizing: border-box;
+}
+
+.login-toast.success {
+    border-left: 4px solid #36d6a0;
+}
+
+.login-toast.error {
+    border-left: 4px solid #ff647c;
+}
+
+.toast-icon {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.login-toast.success .toast-icon {
+    background: rgba(54, 214, 160, 0.14);
+    color: #36d6a0;
+}
+
+.login-toast.error .toast-icon {
+    background: rgba(255, 100, 124, 0.14);
+    color: #ff647c;
+}
+
+.toast-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.toast-content strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.toast-content p {
+    margin: 0;
+    color: #c3cede;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.toast-close {
+    flex-shrink: 0;
+    padding: 0 4px;
+    border: none;
+    background: transparent;
+    color: #a9b6c9;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+.toast-close:hover {
+    color: #ffffff;
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .login-toast {
+        top: 14px;
+        right: 12px;
+        width: calc(100vw - 24px);
+    }
+}
