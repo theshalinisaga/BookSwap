@@ -20,7 +20,7 @@ function Login() {
 
         const timer = setTimeout(() => {
             setToast({ message: "", type: "" });
-        }, 3500);
+        }, 3000);
 
         return () => clearTimeout(timer);
     }, [toast]);
@@ -49,25 +49,27 @@ function Login() {
                     message: "Login succeeded, but no authentication token was returned.",
                     type: "error"
                 });
-                setLoading(false);
                 return;
             }
 
-            localStorage.setItem("username", response.data.username);
+            localStorage.setItem(
+                "username",
+                response.data.username || name
+            );
             localStorage.setItem("user_id", response.data.user_id);
             localStorage.setItem("token", response.data.token);
 
             setToast({
-                message: `Welcome back, ${response.data.username || name}!`,
+                message: `Welcome back, ${response.data.username || name}! You've logged in successfully.`,
                 type: "success"
             });
 
             setTimeout(() => {
                 navigate("/Navbar");
-            }, 1200);
+            }, 1800);
 
         } catch (error) {
-            console.log("Login error:", error.response?.data);
+            console.error("Login error:", error.response?.data || error.message);
 
             setToast({
                 message:
