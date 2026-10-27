@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import logo from "./logo.png";
@@ -9,9 +9,46 @@ import "./Navbar.css";
 function Navbar() {
 
     const navigate = useNavigate();
+    const [welcomeMessage, setWelcomeMessage] = useState("");
+
+useEffect(() => {
+    const loginSuccess = sessionStorage.getItem("loginSuccess");
+    const username = localStorage.getItem("username");
+
+    if (loginSuccess === "true" && username) {
+        setWelcomeMessage(`Welcome back, ${username}!`);
+
+        sessionStorage.removeItem("loginSuccess");
+
+        const timer = setTimeout(() => {
+            setWelcomeMessage("");
+        }, 4000);
+
+        return () => clearTimeout(timer);
+    }
+}, []);
 
     return (
         <div className="bookswap-page">
+            {welcomeMessage && (
+    <div className="login-toast success" role="status">
+        <span className="toast-icon">✓</span>
+
+        <div className="toast-content">
+            <strong>Login Successful</strong>
+            <p>{welcomeMessage} You've logged in successfully.</p>
+        </div>
+
+        <button
+            type="button"
+            className="toast-close"
+            onClick={() => setWelcomeMessage("")}
+            aria-label="Close notification"
+        >
+            ×
+        </button>
+    </div>
+)}
 
             {/* ================= NAVBAR ================= */}
 

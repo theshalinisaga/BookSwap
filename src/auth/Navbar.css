@@ -1396,3 +1396,126 @@ body {
     }
 
 }
+
+/* =====================================================
+   LOGIN SUCCESS WELCOME NOTIFICATION
+   Added without changing existing Navbar styles
+===================================================== */
+
+.login-toast {
+    position: fixed;
+    top: 105px;
+    right: 25px;
+    z-index: 9999;
+
+    width: min(390px, calc(100vw - 32px));
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 18px 16px;
+    border: 1px solid rgba(54, 214, 160, 0.25);
+    border-left: 4px solid #36d6a0;
+    border-radius: 16px;
+
+    background: rgba(11, 25, 48, 0.96);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    color: #ffffff;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.35),
+        0 0 25px rgba(54, 214, 160, 0.06);
+
+    animation: welcomeToastIn 0.4s ease-out;
+}
+
+.login-toast.success .toast-icon {
+    flex-shrink: 0;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: rgba(54, 214, 160, 0.13);
+
+    color: #36d6a0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.toast-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.toast-content strong {
+    display: block;
+    margin-bottom: 5px;
+
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.toast-content p {
+    margin: 0;
+
+    color: #c3cede;
+    font-size: 13px;
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+}
+
+.toast-close {
+    flex-shrink: 0;
+
+    padding: 0 4px;
+    border: none;
+    background: transparent;
+
+    color: #94a3b8;
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.toast-close:hover {
+    color: #ffffff;
+}
+
+@keyframes welcomeToastIn {
+    from {
+        opacity: 0;
+        transform: translateX(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Mobile notification */
+@media (max-width: 480px) {
+    .login-toast {
+        top: 98px;
+        right: 12px;
+        width: calc(100vw - 24px);
+        padding: 15px 12px;
+    }
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .login-toast {
+        animation: none;
+    }
+}

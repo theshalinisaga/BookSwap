@@ -1,125 +1,215 @@
-import React from 'react'
-import axios from "axios"
-import { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
 
-import './Register.css'
-function Register()
-{
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { NavLink, useNavigate } from "react-router-dom";
+import "./Register.css";
+
+function Register() {
     const navigate = useNavigate();
 
-   
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         password: ""
     });
 
-    const handleChange = (e) => {
+    const [toast, setToast] = useState({
+        message: "",
+        type: ""
+    });
 
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!toast.message) return;
+
+        const timer = setTimeout(() => {
+            setToast({ message: "", type: "" });
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, [toast]);
+
+    const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
-
     };
 
-const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    e.preventDefault();
+        if (loading) return;
 
-    try {
+        setLoading(true);
+        setToast({ message: "", type: "" });
 
-        const response = await axios.post(
-            "https://bookswap-backend-five.vercel.app/emp/",
-            formData
-        );
+        try {
+            const response = await axios.post(
+                "https://bookswap-backend-five.vercel.app/emp/",
+                formData
+            );
 
-        console.log("Registration response:", response.data);
+            console.log("Registration response:", response.data);
 
-        localStorage.setItem(
-            "username",
-            response.data.username
-        );
+            const username =
+                response.data.username || formData.username;
 
-        setFormData({
-            username: "",
-            email: "",
-            password: ""
-        });
+            localStorage.setItem("username", username);
 
-        alert("Registration successful!");
+            setFormData({
+                username: "",
+                email: "",
+                password: ""
+            });
 
-        navigate("/Navbar");
+            setToast({
+                message: `Welcome to BookSwap, ${username}! Your account has been created successfully.`,
+                type: "success"
+            });
 
-    } catch (error) {
+            setTimeout(() => {
+                navigate("/Navbar");
+            }, 1800);
 
-        console.log(
-            "Registration error:",
-            error.response?.data
-        );
+        } catch (error) {
+            console.error(
+                "Registration error:",
+                error.response?.data || error.message
+            );
 
-        alert(
-            JSON.stringify(
-                error.response?.data ||
-                "Registration failed"
-            )
-        );
-    }
-};
- return(
-    <div id="register">
-    
-    
-    <form onSubmit={handleSubmit}>
-        <h1>Create Account</h1>
-<p>Join BookSwap and start your reading journey.</p>
-       <label htmlFor="name">
-    Enter Name:
-    <input
-        id="name"
-        name="username"
-        type="text"
-        value={formData.username}
-        onChange={handleChange}
-    />
-</label>
+            const errorData = error.response?.data;
 
-<label htmlFor="email">
-    Enter Email:
-    <input
-        id="email"
-        name="email"
-        type="email"
-        value={formData.email}
-        onChange={handleChange}
-    />
-</label>
+            let errorMessage = "Registration failed. Please try again.";
 
-<label htmlFor="password">
-    Enter Password:
-    <input
-        id="password"
-        name="password"
-        type="password"
-        value={formData.password}
-        onChange={handleChange}
-    />
-</label>
-        <button type="submit">
-        Register
-        </button>
-      <h2>──────── OR ────────</h2>
+            if (errorData) {
+                if (typeof errorData === "string") {
+                    errorMessage = errorData;
+                } else if (errorData.detail) {
+                    errorMessage = errorData.detail;
+                } else if (errorData.message) {
+                    errorMessage = errorData.message;
+                } else {
+                    errorMessage = Object.entries(errorData)
+                        .map(([field, messages]) => {
+                            const message = Array.isArray(messages)
+                                ? messages.join(", ")
+                                : String(messages);
+
+                            return `${field}: ${message}`;
+                        })
+                        .join(" | ");
+                }
+            }
+
+            setToast({
+                message: errorMessage,
+                type: "error"
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div id="register">
+            {toast.message && (
+                <div
+                    className={`register-toast ${toast.type}`}
+                    role="status"
+                    aria-live="polite"
+                >
+                    <span className="toast-icon">
+                        {toast.type === "success" ? "✓" : "!"}
+                    </span>
+
+                    <div className="toast-content">
+                        <strong>
+                            {toast.type === "success"
+                                ? "Registration Successful"
+                                : "Registration Error"}
+                        </strong>
+
+                        <p>{toast.message}</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        className="toast-close"
+                        onClick={() =>
+                            setToast({ message: "", type: "" })
+                        }
+                        aria-label="Close notification"
+                    >
+                        ×
+                    </button>
+                </div>
+            )}
+
+            <form onSubmit={handleSubmit}>
+                <h1>Create Account</h1>
+                <p>Join BookSwap and start your reading journey.</p>
+
+                <label htmlFor="name">
+                    Enter Name:
+                    <input
+                        id="name"
+                        name="username"
+                        type="text"
+                        value={formData.username}
+                        onChange={handleChange}
+                        autoComplete="username"
+                        required
+                    />
+                </label>
+
+                <label htmlFor="email">
+                    Enter Email:
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        autoComplete="email"
+                        required
+                    />
+                </label>
+
+                <label htmlFor="password">
+                    Enter Password:
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        autoComplete="new-password"
+                        required
+                    />
+                </label>
+
+                <button type="submit" disabled={loading}>
+                    {loading ? "Creating Account..." : "Register"}
+                </button>
+
+                <h2>──────── OR ────────</h2>
 
                 <h3>
-              Already have an account? <NavLink to="/login" className={({ isActive })=> isActive ? "active" :"nav-item"}>login</NavLink>
-
+                    Already have an account?{" "}
+                    <NavLink
+                        to="/login"
+                        className={({ isActive }) =>
+                            isActive ? "active" : "nav-item"
+                        }
+                    >
+                        Login
+                    </NavLink>
                 </h3>
-    </form>
-    
-    </div>
-
-        )
-
+            </form>
+        </div>
+    );
 }
-export default Register
+
+export default Register;

@@ -13,6 +13,17 @@ function Browsebooks() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [cartCount, setCartCount] = useState(0);
+    const [toast, setToast] = useState(null);
+
+    useEffect(() => {
+        if (!toast) return;
+
+        const timer = setTimeout(() => {
+            setToast(null);
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, [toast]);
 
     useEffect(() => {
         const updateCartCount = () => {
@@ -23,7 +34,7 @@ function Browsebooks() {
 
                 setCartCount(
                     cart.reduce(
-                        (total, item) => total + item.quantity,
+                        (total, item) => total + (Number(item.quantity) || 0),
                         0
                     )
                 );
@@ -110,12 +121,17 @@ function Browsebooks() {
                 localStorage.getItem(CART_KEY) || "[]"
             );
 
+            if (!Array.isArray(cart)) {
+                throw new Error("Invalid cart data");
+            }
+
             const existingBook = cart.find(
                 (item) => String(item.id) === String(book.id)
             );
 
             if (existingBook) {
-                existingBook.quantity += 1;
+                existingBook.quantity =
+                    (Number(existingBook.quantity) || 0) + 1;
             } else {
                 cart.push({
                     id: book.id,
@@ -130,23 +146,60 @@ function Browsebooks() {
             localStorage.setItem(CART_KEY, JSON.stringify(cart));
 
             setCartCount(
-                cart.reduce((total, item) => total + item.quantity, 0)
+                cart.reduce(
+                    (total, item) => total + (Number(item.quantity) || 0),
+                    0
+                )
             );
 
-            window.alert(`${book.title} added to your cart!`);
+            setToast({
+                type: "success",
+                title: "Added to Your Cart!",
+                message: `${book.title} has been added to your cart successfully.`
+            });
         } catch (err) {
             console.error("Could not update cart:", err);
-            window.alert("Unable to add this book. Please try again.");
+
+            setToast({
+                type: "error",
+                title: "Unable to Add Book",
+                message: "Something went wrong. Please try again."
+            });
         }
     }
 
     function openCart() {
-        // Change this path if your cart route uses another URL.
         window.location.href = "/cart";
     }
 
     return (
         <div id="browsebooks">
+            {toast && (
+                <div
+                    className={`cart-toast ${toast.type}`}
+                    role="status"
+                    aria-live="polite"
+                >
+                    <span className="cart-toast-icon">
+                        {toast.type === "success" ? "✓" : "!"}
+                    </span>
+
+                    <div className="cart-toast-content">
+                        <strong>{toast.title}</strong>
+                        <p>{toast.message}</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        className="cart-toast-close"
+                        onClick={() => setToast(null)}
+                        aria-label="Close notification"
+                    >
+                        ×
+                    </button>
+                </div>
+            )}
+
             <div id="d">
                 <h1>Browse Books</h1>
                 <h3>
